@@ -42,7 +42,3 @@ class Imagens:
                 img.write(data_img)
 
             indice_img += 1
-
-    def save_img(self, data_img, indice):
-            with open(f'img({indice}).png', 'wb') as img:
-                img.write(data_img)
