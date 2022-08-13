@@ -8,12 +8,15 @@ categoria_nekos = ['husbando', 'kitsune', 'neko', 'waifu']
 
 sg.theme('reddit')
 
-layout = [[sg.Text("Image Waifu Download", font=('Arial', 15))],
+layout_inputs = [[sg.Text("Selecione a categoria: "), sg.OptionMenu(categoria_nekos, key='categoria')],
+                 [sg.Text("Quantidade de imagens: "), sg.Input('1', size=(5, 1), justification='right', key='quantidade')],
+                 [sg.Sizer(5, 80)]]
+
+layout = [[sg.Text("Image Waifu Download", font=('', 15))],
           [sg.Sizer(1, 20)],
-          [sg.Text("Selecione a categoria: "), sg.OptionMenu(categoria_nekos, key='categoria')],
-          [sg.Text("Quantidade de imagens: "), sg.Input('1', size=(5, 1), justification='right', key='quantidade')],
+          [sg.Column(layout_inputs), sg.Image('waifu.png')],
           [sg.Button("Download", key='download')]
-          ]
+         ]
 
 
 janela = sg.Window('Waifu Downloader', layout)
