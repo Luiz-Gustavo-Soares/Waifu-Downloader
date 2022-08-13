@@ -1,4 +1,3 @@
-from genericpath import isfile
 import requests
 from os import mkdir, path
 
