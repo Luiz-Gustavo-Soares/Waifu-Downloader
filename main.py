@@ -10,12 +10,12 @@ sg.theme('LightBlue')
 
 layout_inputs = [[sg.Text("Selecione a categoria: "), sg.OptionMenu(categoria_nekos, key='categoria')],
                  [sg.Text("Quantidade de imagens: "), sg.Input('1', size=(5, 1), justification='right', key='quantidade')],
-                 [sg.ProgressBar(100, bar_color=('green', 'white'), size_px=(150, 10), border_width=1, key='progreco')],
-                 [sg.Sizer(1, 30)]]
+                 [sg.ProgressBar(100, bar_color=('green', 'white'), size_px=(150, 10), border_width=1, key='progreco')]
+                ]
 
 layout = [[sg.Text("Image Waifu Download", font=('', 15))],
-          [sg.Sizer(1, 20)],
-          [sg.Column(layout_inputs), sg.Image('waifu.png')],
+          [sg.Canvas(background_color='black', expand_x=True, pad=(0, (4, 20)))],
+          [sg.Column(layout_inputs, pad=(0, (0, 40))), sg.Image('waifu.png')],
           [sg.Button("Download", key='download'), sg.Text('', key='mensagem', font=('', 7), justification='right', size=(40, 1), text_color='red')]]
 
 
@@ -61,7 +61,7 @@ while True:
             janela['mensagem'].update('Quantidade precisa ser um número')
         elif not int(quantidade) > 0:
             janela['mensagem'].update('Quantidade precisa ser um maior que zero')
-        
+             
         else:
             numero_download = int(quantidade)
             quant_barra_progreco_vez = int(100/numero_download)
