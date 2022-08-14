@@ -6,7 +6,7 @@ im = Imagens()
 categoria_nekos = ['husbando', 'kitsune', 'neko', 'waifu']
 
 
-sg.theme('reddit')
+sg.theme('LightBlue')
 
 layout_inputs = [[sg.Text("Selecione a categoria: "), sg.OptionMenu(categoria_nekos, key='categoria')],
                  [sg.Text("Quantidade de imagens: "), sg.Input('1', size=(5, 1), justification='right', key='quantidade')],
@@ -59,6 +59,8 @@ while True:
             janela['mensagem'].update('Categoria não selecionada')
         elif not quantidade.isnumeric():
             janela['mensagem'].update('Quantidade precisa ser um número')
+        elif not int(quantidade) > 0:
+            janela['mensagem'].update('Quantidade precisa ser um maior que zero')
         
         else:
             numero_download = int(quantidade)
