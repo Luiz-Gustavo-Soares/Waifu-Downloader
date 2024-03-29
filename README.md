@@ -2,4 +2,4 @@
 
 Um aplicativo desktop para fazer download de imagens de waifus.
 
-![Waifu Dowloader](https://user-images.githubusercontent.com/88494463/184510877-5d93f5dc-e1e9-430e-aea4-a69923ef54b7.png)
+![Captura de tela de 2024-03-29 15-17-46](https://github.com/Luiz-Gustavo-Soares/Waifu-Downloader/assets/88494463/2f9a61ab-ee8c-49dc-a3a2-ed3b041ae811)
