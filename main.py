@@ -1,70 +1,61 @@
-import PySimpleGUI as sg
-from imagens import Imagens
+import gi
 
-im = Imagens()
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
+from imagens import Imagens
+from time import sleep
+import threading
 
 categoria_nekos = ['husbando', 'kitsune', 'neko', 'waifu']
+imdown = Imagens()
 
+def pb(p, qnt, cat, button):
+    qnt_passo = 1/qnt
+    p.set_fraction(0)
+    
+    for i in range(qnt):
+        links = imdown.get_links_img(cat)
+        imagens = imdown.get_imgs(links)
 
-sg.theme('LightBlue')
+        imdown.save_imgs(imagens)
+        increment = (i/qnt) + qnt_passo
 
-layout_inputs = [[sg.Text("Selecione a categoria: "), sg.OptionMenu(categoria_nekos, key='categoria')],
-                 [sg.Text("Quantidade de imagens: "), sg.Input('1', size=(5, 1), justification='right', key='quantidade')],
-                 [sg.ProgressBar(100, bar_color=('green', 'white'), size_px=(150, 10), border_width=1, key='progreco')]
-                ]
+        p.set_fraction(increment)
 
-layout = [[sg.Text("Image Waifu Download", font=('', 15))],
-          [sg.Canvas(background_color='black', expand_x=True, pad=(0, (4, 20)))],
-          [sg.Column(layout_inputs, pad=(0, (0, 40))), sg.Image('waifu.png')],
-          [sg.Button("Download", key='download'), sg.Text('', key='mensagem', font=('', 7), justification='right', size=(40, 1), text_color='red')]]
+    button.set_sensitive(True)
 
+class App:
+    def __init__(self):
+        builder = Gtk.Builder()
+        builder.add_from_file("layout/layout_waifu.glade")
+        builder.connect_signals(self)
 
-janela = sg.Window('Waifu Downloader', layout)
-
-numero_download = 0
-quant_barra_progreco_vez = 1
-quant_barra_progreco = 0
-
-while True:
-    event, values = janela.read(40)
-
-    if event == sg.WIN_CLOSED:
-        break
-
-
-    if numero_download > 0:
-        janela['download'].update(disabled=True)
-        janela['progreco'].update(visible=True)
-        numero_download -= 1
-        quant_barra_progreco += quant_barra_progreco_vez
-
-        links = im.get_links_img(categoria)
-        imagens = im.get_imgs(links)
-        im.save_imgs(imagens)
+        win = builder.get_object('window')
+        win.show_all()
         
-        janela['progreco'].update(quant_barra_progreco)
-        
-        
-    else:
-        janela['progreco'].update(visible=False)
-        janela['progreco'].update(0)
-        janela['download'].update(disabled=False)
-   
+        self.progress_bar = builder.get_object('progress_bar')
 
-    if event == 'download':
-        categoria = str(values['categoria'])
-        quantidade = str(values['quantidade'])
-        
-        if categoria == '':
-            janela['mensagem'].update('Categoria não selecionada')
-        elif not quantidade.isnumeric():
-            janela['mensagem'].update('Quantidade precisa ser um número')
-        elif not int(quantidade) > 0:
-            janela['mensagem'].update('Quantidade precisa ser um maior que zero')
-             
-        else:
-            numero_download = int(quantidade)
-            quant_barra_progreco_vez = int(100/numero_download)
-            quant_barra_progreco = 0
-            janela['mensagem'].update('')
+        for c in categoria_nekos:
+            builder.get_object('categorias').append(c,c)
 
+        self.categoria = categoria_nekos[3]
+        self.qnt_imgs = 1
+
+    def on_window_destroy(self, *args):
+        Gtk.main_quit()
+
+    def on_categorias_changed(self, categorias):
+        self.categoria = categorias.get_active_text()
+
+    def on_quantidade_value_changed(self, quantidade):
+        self.qnt_imgs = quantidade.get_value_as_int()
+
+    def download_clicked_cb(self, button):
+        button.set_sensitive(False)
+        down = threading.Thread(target=pb, args=(self.progress_bar, self.qnt_imgs, self.categoria, button, ))
+        down.start()
+
+
+if __name__ == '__main__':
+    app = App()
+    Gtk.main()
