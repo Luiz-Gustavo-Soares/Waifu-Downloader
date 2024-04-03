@@ -2,9 +2,10 @@ import gi
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
-from imagens import Imagens
-from time import sleep
 import threading
+
+from imagens import Imagens
+
 
 categoria_nekos = ['husbando', 'kitsune', 'neko', 'waifu']
 imdown = Imagens()
