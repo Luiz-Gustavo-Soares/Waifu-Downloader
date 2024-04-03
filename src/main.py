@@ -4,13 +4,22 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 import threading
 
-from imagens import Imagens
+from src.imagens import Imagens
 
 
 categoria_nekos = ['husbando', 'kitsune', 'neko', 'waifu']
 imdown = Imagens()
 
-def pb(p, qnt, cat, button):
+def download(p, qnt, cat, button):
+    '''
+    Realiza o download das imagens de acordo com os os parametros informados
+    :param p: Gtk.ProgressBar
+    :param qnt: int quantidade de imagens para serem baixadas
+    :param cat: str Categoria selecionada
+    :param button: Gtk.Button botão a ser abilitado apos o terminio dos downloads
+    :return: None
+    '''
+
     qnt_passo = 1/qnt
     p.set_fraction(0)
     
@@ -28,10 +37,12 @@ def pb(p, qnt, cat, button):
 class App:
     def __init__(self):
         builder = Gtk.Builder()
-        builder.add_from_file("layout/layout_waifu.glade")
+        builder.add_from_file("src/layout/layout_waifu.glade")
         builder.connect_signals(self)
 
         win = builder.get_object('window')
+        win.set_title('Waifu Images')
+        win.set_icon_from_file('src/imgs/icon.png')
         win.show_all()
         
         self.progress_bar = builder.get_object('progress_bar')
@@ -53,10 +64,6 @@ class App:
 
     def download_clicked_cb(self, button):
         button.set_sensitive(False)
-        down = threading.Thread(target=pb, args=(self.progress_bar, self.qnt_imgs, self.categoria, button, ))
+
+        down = threading.Thread(target=download, args=(self.progress_bar, self.qnt_imgs, self.categoria, button,))
         down.start()
-
-
-if __name__ == '__main__':
-    app = App()
-    Gtk.main()
